@@ -1,10 +1,17 @@
 package com.socialbook.service.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 
 import com.socialbook.auth.user.AuthenticatedUser;
+import com.socialbook.entity.Role;
 import com.socialbook.entity.User;
+import com.socialbook.enumeration.Roles;
 import com.socialbook.repository.UserRepository;
 import com.socialbook.service.AuthenticationUserService;
 import com.socialbook.service.UserService;
@@ -30,8 +37,10 @@ public class UserServiceImpl implements UserService {
         return userRepository.findUserByEmailAndPassword(email, password);
     }
     
+       
     
     @Override
+    @Secured("ROLE_USER")
     public User getAuthenticatedUserProfile() {
         AuthenticatedUser authUser = authenticatedUserService.getAuthenticatedUser();
         if(authUser != null){
@@ -39,17 +48,43 @@ public class UserServiceImpl implements UserService {
         }
         return null;
     }
-
+    
     @Override
     public void subscribeUser(User user) {
+        Role role = new Role();
+        role.setId(Roles.USER.getId());
+        user.getRoles().add(role);   
         userRepository.save(user);
     }
 
 
-    
-    
- 
-    
+    @Override
+    @Secured("ROLE_USER")
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+        
+    }
 
+    @Override
+    @Secured("ROLE_ADMIN")
+    public List<User> getAllUsersAndTheirConnections() {
+        return  userRepository.findAllUsersAndTheirConnections();
+        
+    }
 
+    @Override
+    @Secured("ROLE_USER")
+    public List<User> getAllConnections() {
+        AuthenticatedUser authUser = authenticatedUserService.getAuthenticatedUser();
+        return userRepository.findUsersAllConnections(authUser.getUser());
+        
+    }
+       
+    @Override
+    @Secured({"ROLE_USER","ROLE_ADMIN"})
+    public Page<User> findAllNotConnectedUsers(){
+        final PageRequest pageRequest = new PageRequest(0, 10);
+        final AuthenticatedUser authUser = authenticatedUserService.getAuthenticatedUser();
+        return userRepository.findAllNotConnectedUsers(authUser.getUser(),pageRequest);
+    }
 }

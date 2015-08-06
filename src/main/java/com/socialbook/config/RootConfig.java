@@ -13,7 +13,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 
 @Configuration
-@ComponentScan(basePackages={"com.movie.portal"},
+@ComponentScan(basePackages={"com.socialbook"},
 excludeFilters={
 @Filter(type=FilterType.ANNOTATION, value=EnableWebMvc.class)
 })

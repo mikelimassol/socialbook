@@ -1,5 +1,9 @@
 package com.socialbook.service;
 
+import java.util.List;
+
+import org.springframework.data.domain.Page;
+
 import com.socialbook.entity.User;
 
 public interface UserService {
@@ -24,14 +28,39 @@ public interface UserService {
 
     /**
      * 
+     * @return all users
+     */
+    List<User> getAllUsers();
+
+    /**
+     * 
+     * @return all users with their connections
+     */
+    List<User> getAllUsersAndTheirConnections();
+
+    /**
+     * 
+     * @param user
+     * @return all of the users connections
+     */
+    List<User> getAllConnections();
+
+    /**
+     * 
      * @return authenticated Users profile
      */
     User getAuthenticatedUserProfile();
 
-    
     /**
      * 
      */
     void subscribeUser(User user);
-
+    
+    
+    /**
+     * 
+     * @param user
+     * @return all not connected users
+     */
+    Page<User> findAllNotConnectedUsers();
 }

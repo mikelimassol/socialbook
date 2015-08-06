@@ -3,6 +3,7 @@ package com.socialbook.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -29,8 +30,17 @@ public class UserController {
     /**
      * Simply selects the home view to render by returning its name.
      */
-    @RequestMapping(value = "/profile", method = RequestMethod.GET)
-    public User profile() {
+    @RequestMapping(value = "/secure/admin/getAllUsers", method = RequestMethod.GET)
+    public List<User> getAll() {
+       return userService.getAllUsersAndTheirConnections();
+    }
+    
+    
+    /**
+     * Simply selects the home view to render by returning its name.
+     */
+    @RequestMapping(value = "/secure/profile", method = RequestMethod.GET)
+    public User getProfile() {
         return userService.getAuthenticatedUserProfile();
     }
     
@@ -39,20 +49,35 @@ public class UserController {
     /**
      * Simply selects the home view to render by returning its name.
      */
-    @RequestMapping(value = "/profile/users", method = RequestMethod.GET)
-    public List<User> users() {
-        return null;
+    @RequestMapping(value = "/secure/connections", method = RequestMethod.GET)
+    public List<User> getConnections() {
+        return userService.getAllConnections();
     }
-    
-
     
     
     /**
-     * Used to subscribe move to subscriber.
+     * Used to subscribe new user
      */
-    @RequestMapping(value = "/subcribe", method = RequestMethod.POST)   
-    public void movieSubscribe(@RequestBody  User user) {
+    @RequestMapping(value = "/secure/connect", method = RequestMethod.POST)   
+    public void connect(@RequestBody  User user) {
        userService.subscribeUser(user);
+    }
+    
+    
+    /**
+     * Used to connect to user
+     */
+    @RequestMapping(value = "/secure/browse/users", method = RequestMethod.GET)   
+    public Page<User> browseUsers() {
+        return userService.findAllNotConnectedUsers();
+    }
+    
+    /**
+     * Used to connect to user
+     */
+    @RequestMapping(value = "/subcribe", produces = "application/json", method = RequestMethod.POST)   
+    public void subscribeUser(@RequestBody  User user) {
+        userConnectionService.createNewConnection(user);
     }
     
 }

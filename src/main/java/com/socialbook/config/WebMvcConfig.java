@@ -2,7 +2,6 @@ package com.socialbook.config;
 
 import java.util.Locale;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -11,7 +10,6 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.i18n.FixedLocaleResolver;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
-import org.springframework.web.servlet.view.tiles3.TilesConfigurer;
 
 /**
  * 
@@ -20,8 +18,36 @@ import org.springframework.web.servlet.view.tiles3.TilesConfigurer;
  */
 @Configuration
 @EnableWebMvc
-@ComponentScan("com.movie.portal.*")
+@ComponentScan("com.socialbook.*")
 public class WebMvcConfig extends WebMvcConfigurerAdapter {
+        
+//    @Value("${tiles.location}")
+//    private String tilesLocation;
+//
+//    /**
+//     * View Resolver.
+//     * 
+//     * @return resolver
+//     */
+//    @Bean
+//    public ViewResolver viewResolver() {
+//        UrlBasedViewResolver resolver = new UrlBasedViewResolver();
+//        resolver.setViewClass(TilesView.class);
+//        return resolver;
+//    }
+//
+//    /**
+//     * Tiles Configuration.
+//     * 
+//     * @return Tiles Configurer
+//     */
+//    @Bean
+//    public TilesConfigurer tilesConfigurer() {
+//        TilesConfigurer tiles = new TilesConfigurer();
+//        tiles.setDefinitions(new String[] { tilesLocation });
+//        tiles.setCheckRefresh(true);
+//        return tiles;
+//    }
 
     @Bean(name = "viewResolver")
     public InternalResourceViewResolver getViewResolver() {

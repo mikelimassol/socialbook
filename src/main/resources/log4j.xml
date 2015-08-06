@@ -31,7 +31,7 @@
 	<logger name="org.springframework.web">
 		<level value="info" />
 	</logger>
-	
+	<!--  
 	<logger name="org.hibernate.SQL" level="debug"> 
 	   <level value="DEBUG" /> 
 	</logger> 
@@ -39,7 +39,7 @@
 	<logger name="org.hibernate.type" level="debug"> 
 	    <level value="TRACE" /> 
 	</logger> 
-
+     -->
 	<!-- Root Logger -->
 	<root>
 		<priority value="warn" />

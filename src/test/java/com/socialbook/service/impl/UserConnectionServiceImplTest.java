@@ -2,7 +2,7 @@ package com.socialbook.service.impl;
 
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 import java.util.ArrayList;
 
@@ -15,6 +15,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import com.socialbook.auth.user.AuthenticatedUser;
 import com.socialbook.entity.User;
 import com.socialbook.entity.UserConnection;
 import com.socialbook.repository.UserConnectionRepository;
@@ -59,5 +60,24 @@ public class UserConnectionServiceImplTest {
         verify(userConnectionRepository, times(1)).findAllByUser(Matchers.any(User.class));
     }
     
+    @Test
+    public void shouldCreateNewConnection(){
+        User user = new User();
+        user.setId(0);
+        AuthenticatedUser authUser = new AuthenticatedUser(user);
+        when(authenticatedUserService.getAuthenticatedUser()).thenReturn(authUser);
+        service.createNewConnection(new User());
+        verify(userConnectionRepository, times(2)).save(Matchers.any(UserConnection.class));
+    }
+    
+    @Test
+    public void shouldNotCreateNewConnection(){
+        User user = new User();
+        user.setId(0);
+        AuthenticatedUser authUser = new AuthenticatedUser(user);
+        when(authenticatedUserService.getAuthenticatedUser()).thenReturn(null);
+        service.createNewConnection(new User());
+        verify(userConnectionRepository, times(0)).save(Matchers.any(UserConnection.class));
+    }
     
 }

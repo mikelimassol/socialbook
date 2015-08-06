@@ -28,7 +28,7 @@ public class Role implements Serializable {
     private String name;
 
     //bi-directional many-to-many association to SystemUser
-    @ManyToMany(mappedBy="roles", cascade={CascadeType.ALL}, fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy="roles", cascade={CascadeType.ALL}, fetch = FetchType.LAZY)
     private Set<User> users;
 
     /**

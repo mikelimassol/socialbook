@@ -15,7 +15,8 @@ public interface UserConnectionService {
     List<UserConnection> findAllByUser(User user);
 
     /**
-     * 
+     * @param user
+     *            object 
      */
-    void connectToUser(User user);
+    void createNewConnection(User user);
 }

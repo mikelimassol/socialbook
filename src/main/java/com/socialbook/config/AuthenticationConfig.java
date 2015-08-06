@@ -7,10 +7,12 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.servlet.configuration.EnableWebMvcSecurity;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 
+import com.socialbook.auth.components.RestAuthenticationEntryPoint;
+import com.socialbook.auth.handler.CustomSavedRequestAwareAuthenticationSuccessHandler;
 import com.socialbook.service.impl.AuthenticationUserServiceImpl;
 
 /**
@@ -22,18 +24,24 @@ import com.socialbook.service.impl.AuthenticationUserServiceImpl;
 @EnableWebMvcSecurity
 @EnableGlobalMethodSecurity(securedEnabled = true)
 public class AuthenticationConfig extends WebSecurityConfigurerAdapter {
-    
+       
     private static final Integer TOKEN_VALIDITY_SECONDS = 2419200;
 
     @Autowired
+    private RestAuthenticationEntryPoint restAuthenticationEntryPoint;
+
+    @Autowired
+    private CustomSavedRequestAwareAuthenticationSuccessHandler authenticationSuccessHandler;
+
+    @Autowired
     private AuthenticationUserServiceImpl sucurityUserService;
-    
+
     @Bean
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
-    
+
     @Override
     protected void configure(AuthenticationManagerBuilder auth)
             throws Exception {
@@ -42,16 +50,37 @@ public class AuthenticationConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http//the reason i disabled this is because i had problem with ajax requests
-            .authorizeRequests()
+        http
+                .csrf().disable()
+                .exceptionHandling()
+                .authenticationEntryPoint(restAuthenticationEntryPoint)
+                .and()
+                .authorizeRequests()
                 .antMatchers("/").permitAll()
-                .antMatchers("/profile/**").authenticated().and().formLogin();
-        
+                .antMatchers("/auth/**").authenticated()
+                .antMatchers("/protected/**").authenticated()
+                .and()
+                .formLogin()
+                .loginPage("/login")
+                .successHandler(authenticationSuccessHandler)
+                .failureHandler(new SimpleUrlAuthenticationFailureHandler())
+                .and()
+                .logout().logoutSuccessUrl("/")
+                .and()
+                .rememberMe()
+                .tokenValiditySeconds(TOKEN_VALIDITY_SECONDS).key("socialbookkey")
+                .and()
+                .logout();
     }
 
-    @Override
-    public void configure(WebSecurity web) throws Exception {
-        super.configure(web);
+    @Bean
+    public CustomSavedRequestAwareAuthenticationSuccessHandler mySuccessHandler() {
+        return new CustomSavedRequestAwareAuthenticationSuccessHandler();
+    }
+
+    @Bean
+    public SimpleUrlAuthenticationFailureHandler myFailureHandler() {
+        return new SimpleUrlAuthenticationFailureHandler();
     }
 
 }

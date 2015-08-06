@@ -1,6 +1,7 @@
 package com.socialbook.entity;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -15,8 +16,11 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 /**
  * 
@@ -51,29 +55,33 @@ public class User implements Serializable {
     @Column(name = "password")
     private String password;
 
-    @Column(name = "is_registered") 
-    private Boolean isRegistered;
-    
     @Column(name = "is_enabled")
     private Boolean isEnabled;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<UserConnection> userConnections;
     
-    @ManyToMany(cascade={CascadeType.ALL}, fetch = FetchType.EAGER)
-    @JoinTable(
-        name="user_roles"
-        , joinColumns={
-            @JoinColumn(name="users_id")
-            }
-        , inverseJoinColumns={
-            @JoinColumn(name="roles_id")
-            }
-        )
+    @OneToMany(mappedBy = "connectetUser", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<UserConnection> connectedUsers;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "user_roles", joinColumns = { @JoinColumn(name = "users_id") }, inverseJoinColumns = { @JoinColumn(name = "roles_id") })
     private Set<Role> roles;
-    
-    
-   
+
+    /**
+     * 
+     */
+    public User() {
+        super();
+    }
+
+    /**
+     * 
+     * @param id param
+     */
+    public User(Integer id) {
+        this.id = id;
+    }
 
     /**
      * @return the id
@@ -83,7 +91,8 @@ public class User implements Serializable {
     }
 
     /**
-     * @param id the id to set
+     * @param id
+     *            the id to set
      */
     public final void setId(final Integer id) {
         this.id = id;
@@ -97,7 +106,8 @@ public class User implements Serializable {
     }
 
     /**
-     * @param name the name to set
+     * @param name
+     *            the name to set
      */
     public final void setName(final String name) {
         this.name = name;
@@ -111,7 +121,8 @@ public class User implements Serializable {
     }
 
     /**
-     * @param email the email to set
+     * @param email
+     *            the email to set
      */
     public final void setEmail(final String email) {
         this.email = email;
@@ -125,43 +136,33 @@ public class User implements Serializable {
     }
 
     /**
-     * @param password the password to set
+     * @param password
+     *            the password to set
      */
     public final void setPassword(final String password) {
         this.password = password;
     }
 
     /**
-     * @return the isRegistered
-     */
-    public final Boolean getIsRegistered() {
-        return isRegistered;
-    }
-
-    /**
-     * @param isRegistered the isRegistered to set
-     */
-    public final void setIsRegistered(final Boolean isRegistered) {
-        this.isRegistered = isRegistered;
-    }
-    
-
-    /**
      * @return the roles
      */
     @JsonIgnore
     public final Set<Role> getRoles() {
+        if (roles == null) {
+            roles = new HashSet<Role>();
+        }
         return roles;
     }
 
     /**
-     * @param roles the roles to set
+     * @param roles
+     *            the roles to set
      */
     public final void setRoles(Set<Role> roles) {
+
         this.roles = roles;
     }
-    
-    
+
     /**
      * @return the isEnabled
      */
@@ -170,27 +171,49 @@ public class User implements Serializable {
     }
 
     /**
-     * @param isEnabled the isEnabled to set
+     * @param isEnabled
+     *            the isEnabled to set
      */
     public final void setIsEnabled(Boolean isEnabled) {
         this.isEnabled = isEnabled;
     }
-    
-    
 
     /**
      * @return the moviePurchases
      */
     @JsonIgnore
-    public final Set<UserConnection> getMoviePurchases() {
+    public final Set<UserConnection> getUserConnections() {
+        if (userConnections == null) {
+            userConnections = new HashSet<UserConnection>();
+        }
         return userConnections;
     }
 
     /**
-     * @param moviePurchase the moviePurchases to set
+     * @param moviePurchase
+     *            the moviePurchases to set
      */
-    public final void setMoviePurchases(Set<UserConnection> userConnections) {
+    public final void setUserConnections(Set<UserConnection> userConnections) {
         this.userConnections = userConnections;
+    }
+    
+
+    /**
+     * @return the connectedUsers
+     */
+    @JsonIgnore
+    public final Set<UserConnection> getConnectedUsers() {
+        if (connectedUsers == null) {
+            connectedUsers = new HashSet<UserConnection>();
+        }
+        return connectedUsers;
+    }
+
+    /**
+     * @param connectedUsers the connectedUsers to set
+     */
+    public final void setConnectedUsers(Set<UserConnection> connectedUsers) {
+        this.connectedUsers = connectedUsers;
     }
 
     /*
@@ -249,16 +272,16 @@ public class User implements Serializable {
         return true;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.lang.Object#toString()
      */
     @Override
     public String toString() {
         return "User [id=" + id + ", name=" + name + ", email=" + email
-                + ", password=" + password + ", isRegistered=" + isRegistered
-                + ", roles=" + roles + "]";
+                + ", password=" + password + ", roles=" + roles
+                + ", userConnections=" + userConnections + "]";
     }
-
-
 
 }

@@ -40,7 +40,7 @@ public class UserConnectionServiceImpl implements UserConnectionService {
     
     
     @Override
-    public void connectToUser(User user) {
+    public void createNewConnection(User user) {
         AuthenticatedUser authUser = authenticatedUserService.getAuthenticatedUser();
         if(authUser != null){
             Calendar cal = Calendar.getInstance();
@@ -49,9 +49,18 @@ public class UserConnectionServiceImpl implements UserConnectionService {
             userConnection.setConnectetUser(user);
             userConnection.setDateConnected(cal.getTime());
             userConnectionRepository.save(userConnection);
+            
+            UserConnection userConnectionInverse = new UserConnection();
+            userConnectionInverse.setUser(user);
+            userConnectionInverse.setConnectetUser(authUser.getUser());
+            userConnectionInverse.setDateConnected(cal.getTime());
+            userConnectionRepository.save(userConnectionInverse);
+            
             userConnectionRepository.flush();
         }
     }
+
+
 
 
     

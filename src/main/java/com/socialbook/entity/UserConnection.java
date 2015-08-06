@@ -3,7 +3,6 @@ package com.socialbook.entity;
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -35,7 +34,7 @@ public class UserConnection implements Serializable {
     @Column(name = "id")
     private Integer id;
     
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
     
@@ -64,6 +63,7 @@ public class UserConnection implements Serializable {
     /**
      * @return the user
      */
+    @JsonIgnore
     public final User getUser() {
         return user;
     }
@@ -78,7 +78,6 @@ public class UserConnection implements Serializable {
     /**
      * @return the connectetUser
      */
-    @JsonIgnore
     public final User getConnectetUser() {
         return connectetUser;
     }
@@ -171,8 +170,8 @@ public class UserConnection implements Serializable {
      */
     @Override
     public String toString() {
-        return "UserConnection [id=" + id + ", user=" + user
-                + ", connectetUser=" + connectetUser + ", dateConnected="
+        return "UserConnection [id=" + id + ", user=" + user.getId()
+                + ", connectetUser=" + connectetUser.getId() + ", dateConnected="
                 + dateConnected + "]";
     }
     
