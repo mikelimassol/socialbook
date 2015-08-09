@@ -40,10 +40,17 @@ public interface UserService {
 
     /**
      * 
-     * @param user
      * @return all of the users connections
      */
     List<User> getAllConnections();
+    
+    
+    /**
+     * 
+     * @param user
+     * @return all of the users connections
+     */
+    List<User> getAllConnections(User user);
 
     /**
      * 
@@ -62,5 +69,5 @@ public interface UserService {
      * @param user
      * @return all not connected users
      */
-    Page<User> findAllNotConnectedUsers();
+    List<User> findAllNotConnectedUsers();
 }

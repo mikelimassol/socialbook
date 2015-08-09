@@ -3,8 +3,6 @@ package com.socialbook.service.impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 
@@ -18,12 +16,10 @@ import com.socialbook.service.UserService;
 
 @Service
 public class UserServiceImpl implements UserService {
-    
+
     @Autowired
     private UserRepository userRepository;
-    
- 
-    
+
     @Autowired
     private AuthenticationUserService authenticatedUserService;
 
@@ -33,58 +29,65 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findUserByEmailAndPassword(final String email, final String password) {
+    public User findUserByEmailAndPassword(final String email,
+            final String password) {
         return userRepository.findUserByEmailAndPassword(email, password);
     }
-    
-       
-    
+
     @Override
     @Secured("ROLE_USER")
     public User getAuthenticatedUserProfile() {
-        AuthenticatedUser authUser = authenticatedUserService.getAuthenticatedUser();
-        if(authUser != null){
+        AuthenticatedUser authUser = authenticatedUserService
+                .getAuthenticatedUser();
+        if (authUser != null) {
             return userRepository.findOne(authUser.getUser().getId());
         }
         return null;
     }
-    
+
     @Override
     public void subscribeUser(User user) {
         Role role = new Role();
         role.setId(Roles.USER.getId());
-        user.getRoles().add(role);   
+        user.getRoles().add(role);
+        user.setIsEnabled(Boolean.TRUE);
         userRepository.save(user);
     }
-
 
     @Override
     @Secured("ROLE_USER")
     public List<User> getAllUsers() {
         return userRepository.findAll();
-        
+
     }
 
     @Override
     @Secured("ROLE_ADMIN")
     public List<User> getAllUsersAndTheirConnections() {
-        return  userRepository.findAllUsersAndTheirConnections();
-        
+        return userRepository.findAllUsersAndTheirConnections();
+
     }
 
     @Override
-    @Secured("ROLE_USER")
+    @Secured({ "ROLE_USER", "ROLE_ADMIN" })
     public List<User> getAllConnections() {
-        AuthenticatedUser authUser = authenticatedUserService.getAuthenticatedUser();
-        return userRepository.findUsersAllConnections(authUser.getUser());
-        
+        AuthenticatedUser authUser = authenticatedUserService
+                .getAuthenticatedUser();
+        return userRepository.findAllConnectedUsers(authUser.getUser());
+
     }
-       
+
     @Override
-    @Secured({"ROLE_USER","ROLE_ADMIN"})
-    public Page<User> findAllNotConnectedUsers(){
-        final PageRequest pageRequest = new PageRequest(0, 10);
-        final AuthenticatedUser authUser = authenticatedUserService.getAuthenticatedUser();
-        return userRepository.findAllNotConnectedUsers(authUser.getUser(),pageRequest);
+    @Secured({ "ROLE_USER", "ROLE_ADMIN" })
+    public List<User> getAllConnections(User user) {
+        return userRepository.findAllConnectedUsers(user);
+    }
+
+    @Override
+    @Secured({ "ROLE_USER", "ROLE_ADMIN" })
+    public List<User> findAllNotConnectedUsers() {
+        final AuthenticatedUser authUser = authenticatedUserService
+                .getAuthenticatedUser();
+        return userRepository.findAllNotConnectedUsers(authUser.getUser());
     }
 }

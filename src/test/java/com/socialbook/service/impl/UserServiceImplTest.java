@@ -121,12 +121,12 @@ public class UserServiceImplTest {
         user.setId(0);
         AuthenticatedUser authUser = new AuthenticatedUser(user);
         when(authenticatedUserService.getAuthenticatedUser()).thenReturn(authUser); 
-        when(userRepository.findUsersAllConnections(Matchers.any(User.class))).thenReturn(new ArrayList<User>());
+        when(userRepository.findAllConnectedUsers(Matchers.any(User.class))).thenReturn(new ArrayList<User>());
         
         service.getAllConnections();
         
         verify(authenticatedUserService, times(1)).getAuthenticatedUser();
-        verify(userRepository, times(1)).findUsersAllConnections(Matchers.any(User.class));
+        verify(userRepository, times(1)).findAllConnectedUsers(Matchers.any(User.class));
         
     }
     

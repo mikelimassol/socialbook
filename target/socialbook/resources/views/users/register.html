@@ -1,46 +1,62 @@
+ <div class="modal-header">
+     <h3 class="modal-title">Register</h3>
+ </div>
+ 
+ <div class="alert alert-danger"
+ ng-bind="regModCtrl.errorMessage"
+ ng-show="regModCtrl.errorMessage"></div>
 
-    <script type="text/ng-template" id="myModalContent.html">
-        <div class="modal-header">
-            <h3 class="modal-title">Register</h3>
-        </div>
-        <div class="row-fluid">
-            <div style="padding:20px">
-            <form name="registerForm"
-                class="form-horizontal"
-                role="form">
-                <div>
-                   <div class="form-group">
-                    <input ng-model="regModCtrl.user.name" 
-                           id="name" 
-                           type="text" 
-                           class="span12" 
-                           required 
-                           placeholder="Enter Name">
-                   </div>
-                    <input ng-model="regModCtrl.user.username" 
-                           id="email" 
-                           type="text" 
-                           class="span12" 
-                           required 
-                           placeholder="Enter Username">
-                   </div>
-                   <div class="form-group">
-                    <input ng-model="regModCtrl.user.password" 
-                           id="password" 
-                           type="password"  
-                           class="span12" 
-                           required 
-                           placeholder="Enter Password">
-                    </div>
-                </div>
-            </form>
-         </div>
-     
-      </div>
-        <div class="modal-footer">
-            <button ng-disabled="registerForm.$invalid" class="btn btn-primary" ng-click="regModCtrl.ok()">OK</button>
-            <button class="btn btn-warning" ng-click="regModCtrl.cancel()">Cancel</button>
-        </div>
-    </script>
+ <div class="alert alert-success"
+ ng-bind="regModCtrl.successMessage"
+ ng-show="regModCtrl.successMessage"></div>
+ 
+ <div ng-show="!regModCtrl.successMessage" class="row-fluid">
+     <div style="padding:20px">
+      <form name="registerForm"
+          class="form-horizontal"
+          role="form">
+          <div>
+             <div class="form-group">
+              <input ng-model="regModCtrl.user.name" 
+                     name="name" 
+                     type="text" 
+                     class="span12" 
+                     required 
+                     placeholder="Enter Name">
+                     <span ng-show="registerForm.name.$error.required">
+                         Name is a required field
+                      </span>
+             </div>
+             <div class="form-group">
+              <input ng-model="regModCtrl.user.email" 
+                     name="email" 
+                     type="text" 
+                     class="span12" 
+                     required 
+                     placeholder="Enter Email">
+                      <span ng-show="registerForm.email.$error.required">
+                         Email is a required field
+                      </span>
+             </div>
+             <div class="form-group">
+              <input ng-model="regModCtrl.user.password" 
+                     name="password" 
+                     type="password"  
+                     class="span12" 
+                     required 
+                     placeholder="Enter Password">
+                     <span ng-show="registerForm.password.$error.required">
+                         Password is a required field
+                     </span>
+              </div>
+          </div>
+      </form>
+   </div>
+</div>
+  <div class="modal-footer">
+      <button ng-disabled="registerForm.$invalid" ng-show="!regModCtrl.successMessage" class="btn btn-primary" ng-click="regModCtrl.ok()">OK</button>
+      <button class="btn btn-warning" ng-click="regModCtrl.cancel()">Close</button>
+  </div>
+
 
 

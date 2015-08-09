@@ -1,0 +1,18 @@
+<div class="">
+        <div class="alert alert-danger"
+        ng-bind="homeCtrl.errorMessage"
+        ng-show="homeCtrl.errorMessage"></div>
+
+        <div class="alert alert-success"
+        ng-bind="homeCtrl.successMessage"
+        ng-show="homeCtrl.successMessage"></div>
+        
+    <div  class="well" ng-repeat="user in homeCtrl.users" >
+    
+     {{user.name}}<br/>
+     <input type="button"
+         class="btn btn-success btn-lg"
+         value="View Connections"
+         ng-click="homeCtrl.viewUserConnections(user)">
+    </div>
+</div>

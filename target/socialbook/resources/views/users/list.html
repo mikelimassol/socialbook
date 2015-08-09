@@ -1,0 +1,18 @@
+<div class="">
+        <div class="alert alert-danger"
+        ng-bind="usrCtrl.errorMessage"
+        ng-show="usrCtrl.errorMessage"></div>
+
+        <div class="alert alert-success"
+        ng-bind="usrCtrl.successMessage"
+        ng-show="usrCtrl.successMessage"></div>
+        
+	<div  class="well" ng-repeat="user in usrCtrl.users" >
+	
+	 {{user.name}}<br/>
+	 <input type="button"
+         class="btn btn-success btn-lg"
+         value="Connect"
+         ng-click="usrCtrl.connect(user)">
+	</div>
+</div>

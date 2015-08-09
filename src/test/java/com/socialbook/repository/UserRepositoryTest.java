@@ -53,14 +53,13 @@ public class UserRepositoryTest {
     
     @Test
     public void shouldGetAUsersConnections(){
-        List<User> users = userRepository.findUsersAllConnections(new User(2));
+        List<User> users = userRepository.findAllConnectedUsers(new User(2));
 
         
         assertEquals(2, users.size());
-        assertEquals(3, users.get(0).getId().intValue());
-        assertEquals(4, users.get(1).getId().intValue());
-        
-        assertEquals(2, users.get(0).getUserConnections().size());
+        assertEquals(4, users.get(0).getId().intValue());
+        assertEquals(3, users.get(1).getId().intValue());
+  
     }
     
     
