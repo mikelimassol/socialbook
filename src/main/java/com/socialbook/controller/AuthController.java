@@ -24,7 +24,7 @@ public class AuthController {
         
     /**
      * 
-     * @return List or roles
+     * @return the authenticated user, this page is not accessible if user not logged in
      */
     @RequestMapping(value = "/session", method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
